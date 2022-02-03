@@ -54,22 +54,7 @@ function removeLoading() {
   document.querySelector('.loading').remove();
 }
 
-// Função para criar a lista de produtos
-const items = document.querySelector('.items');
-const productsList = async (product) => {
-  const products = await fetchProducts(product);
-  products.results.forEach((item) => {
-    const object = {
-      sku: item.id,
-      name: item.title,
-      image: item.thumbnail,
-    };
-    items.appendChild(createProductItemElement(object));
-  });
-};
-
 // Função para criar itens no carrinho
-const addButton = document.querySelectorAll('.item__add');
 const cart = document.querySelector('.cart__items');
 const productsCart = async (event) => {
   const item = event.target.parentNode;
@@ -83,9 +68,24 @@ const productsCart = async (event) => {
   cart.appendChild(createCartItemElement(object));
 };
 
+// Função para criar a lista de produtos
+const items = document.querySelector('.items');
+const productsList = async (product) => {
+  const products = await fetchProducts(product);
+  products.results.forEach((item) => {
+    const object = {
+      sku: item.id,
+      name: item.title,
+      image: item.thumbnail,
+    };
+    items.appendChild(createProductItemElement(object));
+  });
+  const addButton = document.querySelectorAll('.item__add');
+  addButton.forEach((button) => button.addEventListener('click', productsCart));
+};
+
 window.onload = async () => {
   createLoading();
   await productsList('computador');
   removeLoading();
-  addButton.forEach((button) => button.addEventListener('click', productsCart));
 };
