@@ -30,6 +30,7 @@ function getSkuFromProductItem(item) {
 
 function cartItemClickListener(event) {
   // coloque s código aqui
+  event.target.remove();
 }
 
 function createCartItemElement({ sku, name, salePrice }) {
@@ -40,4 +41,51 @@ function createCartItemElement({ sku, name, salePrice }) {
   return li;
 }
 
-window.onload = () => { };
+// Funções para criar e remover a mensagem de "carregando".
+function createLoading() {
+  const cart = document.querySelector('.cart');
+  const loadingMessage = document.createElement('span');
+  loadingMessage.classList.add('loading');
+  loadingMessage.innerText = 'Aguarde pequeno Padawan!';
+  cart.appendChild(loadingMessage);
+}
+
+function removeLoading() {
+  document.querySelector('.loading').remove();
+}
+
+// Função para criar a lista de produtos
+const items = document.querySelector('.items');
+const productsList = async (product) => {
+  const products = await fetchProducts(product);
+  products.results.forEach((item) => {
+    const object = {
+      sku: item.id,
+      name: item.title,
+      image: item.thumbnail,
+    };
+    items.appendChild(createProductItemElement(object));
+  });
+};
+
+// Função para criar itens no carrinho
+const addButton = document.querySelectorAll('.item__add');
+const cart = document.querySelector('.cart__items');
+const productsCart = async (event) => {
+  const item = event.target.parentNode;
+  const getSku = getSkuFromProductItem(item);
+  const itemsParam = await fetchItem(getSku);
+  const object = {
+    sku: itemsParam.id,
+    name: itemsParam.title,
+    salePrice: itemsParam.price,
+  };
+  cart.appendChild(createCartItemElement(object));
+};
+
+window.onload = async () => {
+  createLoading();
+  await productsList('computador');
+  removeLoading();
+  addButton.forEach((button) => button.addEventListener('click', productsCart));
+};
