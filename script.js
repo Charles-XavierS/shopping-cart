@@ -55,7 +55,7 @@ function removeLoading() {
 }
 
 // Função para criar itens no carrinho
-const cart = document.querySelector('.cart__items');
+const cartItem = document.querySelector('.cart__items');
 const productsCart = async (event) => {
   const item = event.target.parentNode;
   const getSku = getSkuFromProductItem(item);
@@ -65,7 +65,7 @@ const productsCart = async (event) => {
     name: itemsParam.title,
     salePrice: itemsParam.price,
   };
-  cart.appendChild(createCartItemElement(object));
+  cartItem.appendChild(createCartItemElement(object));
 };
 
 // Função para criar a lista de produtos
@@ -84,8 +84,17 @@ const productsList = async (product) => {
   addButton.forEach((button) => button.addEventListener('click', productsCart));
 };
 
+// Função para esvaziar o carrinho ao apertar no botão
+const clearButton = document.querySelector('.empty-cart');
+const clearCart = () => {
+  const cartItems = document.querySelector('.cart__items');
+  cartItems.innerHTML = '';
+};
+
 window.onload = async () => {
   createLoading();
   await productsList('computador');
   removeLoading();
+
+  clearButton.addEventListener('click', clearCart);
 };
