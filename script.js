@@ -84,11 +84,16 @@ const productsList = async (product) => {
   addButton.forEach((button) => button.addEventListener('click', productsCart));
 };
 
+//
+const totalPrice = document.querySelector('.total-price');
+// const target = document.querySelector
+
 // Função para esvaziar o carrinho ao apertar no botão
 const clearButton = document.querySelector('.empty-cart');
 const clearCart = () => {
   const cartItems = document.querySelector('.cart__items');
   cartItems.innerHTML = '';
+  totalPrice.innerHTML = '0';
 };
 
 window.onload = async () => {
